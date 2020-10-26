@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "pilha.h"
+#include <string.h>
 
 int ** alocaMatriz (int lin, int col) {
   int ** mat = malloc (lin * sizeof(int *));
@@ -25,7 +26,7 @@ void imprimeMatriz (int **a, int m, int n) {
 }
 
 int main(){
-  int linha,coluna,valor;
+  int linha,coluna,valor,QtdPalavras;
   int i,j;
 
   printf("Por favor, Digite o número de linhas da matriz:\n");
@@ -45,5 +46,20 @@ int main(){
 
   imprimeMatriz(tabuleiro,linha,coluna);
 
+  printf("Por favor, Digite a quantidade de palavras:");
+  scanf("%d",&QtdPalavras);
+  getchar();
+  palavra** dicionario = malloc(QtdPalavras * sizeof(palavra*));
+
+  
+ for(i=0;i<QtdPalavras;i++){
+   dicionario[i] = malloc(sizeof(palavra));
+   colocapalavra(dicionario[i]);
+   colocatamanho(dicionario[i]);
+ }
+  ordenapalavras(dicionario,QtdPalavras);
+
+ printf("%s\n",dicionario[0]->palavra);
+ printf("%s\n",dicionario[1]->palavra);
   printf("Acabou\n");
 }

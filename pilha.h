@@ -10,9 +10,14 @@ typedef struct {
 
 typedef struct{
   char* palavra;
-  int tamanho
+  int tamanho;
+  int disponibilidade;
 } palavra;
 
+void troca(palavra **v, int i, int j);
+void ordenapalavras(palavra **p,int n);
+void colocapalavra(palavra *p);
+void colocatamanho(palavra *p);
 pilha * criaPilha (int tam);
 void destroiPilha (pilha * p);
 void empilha (pilha * p, item x);
