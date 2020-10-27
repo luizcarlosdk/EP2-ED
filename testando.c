@@ -2,13 +2,11 @@
     #include <stdlib.h>
     #include <string.h>
 
-//funcao que recebe a entrada e armazena numa struct livro
-void colocapalavra(VetorPalavras *p){
+void colocapalavra(palavra *p){
     char letra = 0;
     int pos = 0;
     char auxiliar = (char) malloc(sizeof(char));
 
-    //recebe os caracteres e vai colocando na regiao apontada pelo ponteiro nomeaux
     while(letra != '\n'){
         letra = getchar();
             auxiliar = realloc(auxiliar, (pos+1)*sizeof(char));
@@ -17,8 +15,8 @@ void colocapalavra(VetorPalavras *p){
     nomeaux[--pos] = '\0';
 
     //passa o end alocado pelo nomeaux para o p->nome da struct atual
-    p->nome = nomeaux;
-    nomeaux = NULL;
+    p->palavra = auxiliar;
 
-    scanf("%f", &p->valor);
+    free(auxiliar)
+    //auxiliar = NULL;
 }

@@ -96,8 +96,7 @@
 0
 0
 0
-4
+3
+cachorro
 casa
-leo
-tenente
-ab
+carro
