@@ -1,6 +1,13 @@
 #include <stdio.h>
 
-typedef int item;
+typedef struct{
+  int linha;
+  int coluna;
+  int indice;
+  int leitura; //Define a direção no qual será feita a leitura, ajudará a controlar os while.
+}pulaPalavra;
+
+typedef pulaPalavra item;
 
 typedef struct {
   item * v;

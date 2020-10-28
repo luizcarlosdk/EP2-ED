@@ -75,7 +75,6 @@ item desempilha (pilha * p) {
     p->topo --;
     return (p->v[p->topo]);
   }
-  return 0;
 }
  
 int pilhaVazia (pilha * p) {
@@ -86,7 +85,6 @@ item topoDaPilha (pilha *p) {
   if (!pilhaVazia(p)){
     return (p->v[p->topo - 1]);
   }
-  return 0;
 }
 
 /* dobra o tamanho da pilha *//*
