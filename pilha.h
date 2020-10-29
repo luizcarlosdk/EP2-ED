@@ -4,7 +4,7 @@ typedef struct{
   int linha;
   int coluna;
   int indice;
-  int leitura; //Define a direção no qual será feita a leitura, ajudará a controlar os while.
+  int leitura; 
 }pulaPalavra;
 
 typedef pulaPalavra item;
@@ -21,6 +21,7 @@ typedef struct{
   int disponibilidade;
 } palavra;
 
+void destroiDicionario (palavra ** p,int Quantidade);
 void troca(palavra **v, int i, int j);
 void ordenapalavras(palavra **p,int n);
 void colocapalavra(palavra *p);

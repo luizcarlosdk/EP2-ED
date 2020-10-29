@@ -1,9 +1,45 @@
+5
+10
+6
+ 0  -1  0  0  0  0
+ 0   0  0  0 -1 -1
+ 0   0  0  0  0  0
+-1   0  0 -1  0  0
+-1   0  0  0  0  0
+ 0   0 -1 -1 -1 -1
+ 0   0  0  0  0  0
+ 0  -1 -1 -1  0  0
+ 0   0 -1  0  0  0
+ 0   0  0 -1 -1 -1
+ 22
+eli
+sua
+rio
+asm
+aod
+chnoa
+ob
+linkar
+navio
+sol
+oba
+foi
+io
+il
+arvore
+na
+karma
+su
+no
+lindas
+olho
+casa
 5 4
--1 0  0   0
-0  0  0   0
-0  0  -1  0
-0  0  0   0
-0  -1 0   0
+-1 0 0 0
+0 0 0 0
+0 0 -1 0
+0 0 0 0
+0 -1 0 0
 10
 ad
 antas
@@ -15,3 +51,58 @@ lua
 os
 soda
 ur
+7
+7
+-1  0  0  0  0  -1  0 
+ 0  0  0  0  0  -1  0
+-1  0 -1  0  0  -1  0 
+-1  0  0  0  0   0  0
+ 0  0  0  0  0   0  0
+ 0  0  0 -1 -1  -1 -1 
+-1  0  0 -1 -1   0  0
+16
+fogo
+loser
+de
+maluca
+multado
+zly
+aa
+de
+mz
+formula
+os
+alya
+gedlt
+oreua
+cd
+farao
+5 4
+-1 0 0 0
+0 0 0 0
+0 0 -1 0
+0 0 0 0
+0 -1 0 0
+10
+ad
+antas
+carn
+casa
+do
+lado
+lua
+os
+viki
+ur
+3 3
+-1 0 0
+0 0 0
+0 -1 0
+5
+ab
+au
+bug
+la
+lua
+
+

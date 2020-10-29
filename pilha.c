@@ -5,7 +5,7 @@
 
 
 
-void ordenapalavras(palavra **p,int n){ //Realizar essa ordenação por bubblesort
+void ordenapalavras(palavra **p,int n){ /*Realizar essa ordenação por bubblesort*/
     int inv = 1,j,i;
     for(j=0;j<n-1 && inv;j++)
         while(inv){
@@ -42,8 +42,6 @@ void colocapalavra(palavra *p){
             auxiliar[pos++] = letra;   
     }
     auxiliar[--pos] = '\0';
-
-    //passa o end alocado pelo nomeaux para o p->nome da struct atual
     p->palavra = auxiliar;
     auxiliar = NULL;
 }
@@ -57,7 +55,17 @@ pilha * criaPilha (int tam) {
     return NULL; 
   return p;
 } 
-  
+
+void destroiDicionario (palavra ** p,int Quantidade) {
+  int i;
+  for (i = 0; i < Quantidade; i++)
+  {
+    free(p[i]->palavra);
+    free(p[i]);
+  }
+  free (p);
+} 
+
 void destroiPilha (pilha * p) {
   free (p->v);
   free (p);

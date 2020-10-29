@@ -3,16 +3,37 @@
 #include <string.h>
 #include "pilha.h"
 
+void imprimepalavraHorizontal(char **tabuleiro, palavra** Dicionario,int linha,int coluna,int indice,int tamanho){
+  int i;
 
-int verifica(int tamanho, palavra **Dicionario, int indice){
-  if(Dicionario[indice]->tamanho == tamanho && Dicionario[indice]->disponibilidade != 0){
-    return 1;
-  }
-  else
+  for (i=0; i < tamanho; i++)
   {
-    return 0;
+    tabuleiro[linha][coluna+i] = Dicionario[indice]->palavra[i];
   }
+  
 }
+
+void imprimepalavraVertical(char **tabuleiro, palavra** Dicionario,int linha,int coluna,int indice,int tamanho){
+  int i;
+
+  for (i=0; i < tamanho; i++)
+  {
+    tabuleiro[linha+i][coluna] = Dicionario[indice]->palavra[i];
+  }
+  
+}
+
+int VerificaVertical(char** tabuleiro, int tamanho, palavra **Dicionario, int indice,int linha, int coluna){
+  int i;
+  for (i = 0; i < tamanho; i++)
+  {
+    if(tabuleiro[linha+i][coluna] != Dicionario[indice]->palavra[i] && tabuleiro[linha+i][coluna] != ' '){
+      return 0;
+    }
+  }
+  return 1;
+}
+
 int **alocaMatrizInt(int lin, int col)
 {
   int **mat = malloc(lin * sizeof(int *));
@@ -29,6 +50,18 @@ char **alocaMatrizChar(int lin, int col)
   for (i = 0; i < lin; i++)
     mat[i] = malloc(col * sizeof(char));
   return (mat);
+}
+
+void liberaMatrizInt (int ** mat, int lin){
+  int i;
+  for (i = 0; i < lin; i++) free(mat[i]);
+  free (mat);
+}
+
+void liberaMatrizChar (char ** mat, int lin){
+  int i;
+  for (i = 0; i < lin; i++) free(mat[i]);
+  free (mat);
 }
 
 int ContaDireta(char **matriz, int linhaAtual, int ColunaAtual, int ColunaMax)
@@ -55,7 +88,7 @@ int ContaAbaixo(char **matriz, int linhaAtual, int ColunaAtual, int LinhaMax)
 
 int contaPalavras(int **matriz, int linhas, int colunas)
 {
-  int contador, linhaAtual = 0, colunaAtual = 0;
+  int contador=0, linhaAtual = 0, colunaAtual = 0;
   int i, j;
   int ContadorPalavras = 0;
 
@@ -160,9 +193,9 @@ void imprimeMatrizChar(char **a, int m, int n)
 void PalavrasCruzadas(char **tabuleiroResposta, int linhaMax, int colunaMax, int total, palavra **Dicionario, int PalavrasDisponiveis)
 {
   pilha *decisao = criaPilha(total);
-  int palavras = 0; // Variavel para guardar o total de palavras
-  int vertical = 0, horizontal = 0; //controlar o while do vertical
-  int indicepalavra = 0;            //indice da palavra atual no vetor
+  int palavras = 0; 
+  int vertical = 0, horizontal = 0; 
+  int indicepalavra = 0;
   int linhaAtual = 0, colunaAtual = 0;
   int tamanho=0;
   pulaPalavra atual;
@@ -172,26 +205,23 @@ void PalavrasCruzadas(char **tabuleiroResposta, int linhaMax, int colunaMax, int
   {
 
     while (horizontal == 0)
-    { //Loop para manter na horizontal.
-    printf("Entrei aq\n");
+    {
       while (linhaAtual < linhaMax)
-      { //
+      { 
         if (colunaAtual < colunaMax)
-        { // Decidir quando trocar a linha
+        { 
 
-         if (tabuleiroResposta[linhaAtual][colunaAtual] == '*')
+         if (ContaDireta(tabuleiroResposta, linhaAtual, colunaAtual, colunaMax) < 1) 
           {
             colunaAtual++;
           }
-        
-          ok = 0;
+          else{
+             ok = 0;
           tamanho = ContaDireta(tabuleiroResposta, linhaAtual, colunaAtual, colunaMax);
-          printf("Este é o tamanho:%d\n",tamanho);
-          while (!ok && indicepalavra < PalavrasDisponiveis)
+          while (!ok && indicepalavra < PalavrasDisponiveis && tamanho>1)
           {
-            if (Dicionario[indicepalavra]->tamanho == tamanho){
+            if (Dicionario[indicepalavra]->tamanho == tamanho && Dicionario[indicepalavra]->disponibilidade == 1){
               ok = 1;
-              printf("Achei um\n");
             }
               
             else{
@@ -205,30 +235,32 @@ void PalavrasCruzadas(char **tabuleiroResposta, int linhaMax, int colunaMax, int
             atual.linha = linhaAtual;
             atual.coluna = colunaAtual;
             atual.indice = indicepalavra;
-            empilha(decisao, atual);
-            colunaAtual = colunaAtual + tamanho;
+            atual.leitura = horizontal;
             Dicionario[indicepalavra]-> disponibilidade = 0;
-            indicepalavra=0; //começa a comparar a partir do começo no novo bloco de palavra
-            palavras++;
+            empilha(decisao, atual);
+            
+            palavras = palavras+1;
+            imprimepalavraHorizontal(tabuleiroResposta,Dicionario,linhaAtual,colunaAtual,indicepalavra,tamanho);
+            colunaAtual = colunaAtual + tamanho;
+            indicepalavra=0;
+            
           }
           else
-          { /* backtrack */
-            if (pilhaVazia(decisao))
+          { 
+            if (pilhaVazia(decisao) && tamanho > 1)
             {
               destroiPilha(decisao);
-              printf("Este é o valor do indice:%d\n",indicepalavra);
-              printf("Não há solução.");
+              printf("Não há solução.\n");
               return;
             }
             else if(tamanho > 1){
-              printf("Backtracking\n");
-            atual = desempilha(decisao);
+            atual = desempilha(decisao); 
             colunaAtual = atual.coluna;
             linhaAtual = atual.linha;
             indicepalavra = atual.indice;
             Dicionario[indicepalavra]-> disponibilidade = 1;
             indicepalavra++;
-            palavras--;
+            palavras = palavras-1;
             }
             else
             {
@@ -237,6 +269,8 @@ void PalavrasCruzadas(char **tabuleiroResposta, int linhaMax, int colunaMax, int
             }
             
           }
+          }
+         
         }
         else
         {
@@ -252,27 +286,29 @@ void PalavrasCruzadas(char **tabuleiroResposta, int linhaMax, int colunaMax, int
       vertical = 0;
       linhaAtual=0;
       colunaAtual=0;
-      indicepalavra=0;
       while (vertical == 0)
       {
-        while (colunaAtual < colunaMax)
-      { //
-        if (linhaAtual < linhaMax)
-        { // Decidir quando trocar a linha
-
-          if (tabuleiroResposta[linhaAtual][colunaAtual] == '*')
+        while (colunaAtual < colunaMax && horizontal == 1)
+      { 
+        if (linhaAtual < linhaMax && horizontal == 1)
+        {
+          if (ContaAbaixo(tabuleiroResposta, linhaAtual, colunaAtual, linhaMax) < 1) 
           {
             linhaAtual++;
           }
-
-          ok = 0;
+          else{
+            ok = 0;
           tamanho = ContaAbaixo(tabuleiroResposta, linhaAtual, colunaAtual, linhaMax);
-          printf("Este é o tamanho:%d\n",tamanho);
           while (!ok && indicepalavra < PalavrasDisponiveis)
           {
-            if (Dicionario[indicepalavra]->tamanho == tamanho){
-              printf("Achei um\n");
+            if (Dicionario[indicepalavra]->tamanho == tamanho && Dicionario[indicepalavra]->disponibilidade == 1){
+              if(VerificaVertical(tabuleiroResposta,tamanho,Dicionario,indicepalavra,linhaAtual,colunaAtual)){
               ok = 1;
+              }
+              else{
+                indicepalavra++;
+              }
+              
             }
               
             else
@@ -284,30 +320,30 @@ void PalavrasCruzadas(char **tabuleiroResposta, int linhaMax, int colunaMax, int
             atual.linha = linhaAtual;
             atual.coluna = colunaAtual;
             atual.indice = indicepalavra;
-            empilha(decisao, atual);
-            linhaAtual = linhaAtual + tamanho;
+            atual.leitura = horizontal;
             Dicionario[indicepalavra]-> disponibilidade = 0;
-            indicepalavra=0; //começa a comparar a partir do começo no novo bloco de palavra
-            palavras++;
+            empilha(decisao, atual);
+            
+            palavras = palavras+1;
+            linhaAtual = linhaAtual + tamanho;
+            
+            indicepalavra=0; 
+            
           }
           else
-          { /* backtrack */
-            if (pilhaVazia(decisao))
-            {
-              destroiPilha(decisao);
-              printf("O indice da palavra é = %d",indicepalavra);
-              printf("Não há solução.");
-              return;
-            }
+          { 
             if(tamanho > 1){
-              printf("Backtracking\n");
-              atual = desempilha(decisao);
+            atual = desempilha(decisao); 
             colunaAtual = atual.coluna;
             linhaAtual = atual.linha;
             indicepalavra = atual.indice;
+            horizontal = atual.leitura;
             Dicionario[indicepalavra]-> disponibilidade = 1;
             indicepalavra++;
-            palavras--;
+            palavras = palavras-1;
+              if(horizontal == 0){
+                vertical = 1;
+              }
             }
             else
             {
@@ -316,6 +352,9 @@ void PalavrasCruzadas(char **tabuleiroResposta, int linhaMax, int colunaMax, int
             }
             
           }
+          }
+
+          
         }
         else
         {
@@ -324,52 +363,57 @@ void PalavrasCruzadas(char **tabuleiroResposta, int linhaMax, int colunaMax, int
         }
       }
       vertical = 1;
-      printf("Acabou xD\n");
       }
-    
   }
-    //imprimeMatrizChar(tabuleiroResposta);
+    while(atual.leitura == 1){
+      atual = desempilha(decisao);
+      tamanho = ContaAbaixo(tabuleiroResposta,atual.linha,atual.coluna,linhaMax);
+      imprimepalavraVertical(tabuleiroResposta,Dicionario,atual.linha,atual.coluna,atual.indice,tamanho);
+
+    }
+    imprimeMatrizChar(tabuleiroResposta,linhaMax,colunaMax);
     destroiPilha(decisao);
 }
 
   int main()
   {
-    int linha, coluna, valor, QtdPalavras;
-    int i, j;
-
-    printf("Por favor, Digite o número de linhas da matriz:\n");
+    int linha, coluna, valor, QtdPalavras,instancias,totalpalavras;
+    int i, j,k;
+    int **tabuleiro;
+    palavra **dicionario;
+    char **tabuleiroResposta;
+    printf("Por favor, digite o número de instâncias:\n");
+    scanf("%d",&instancias);
+    for (k = 0; k < instancias; k++)
+    {
+    printf("Instância %d :\n",k+1);
     scanf("%d", &linha);
-    printf("Por favor, Digite o número de colunas da matriz:\n");
     scanf("%d", &coluna);
 
-    int **tabuleiro = alocaMatrizInt(linha, coluna);
+    tabuleiro = alocaMatrizInt(linha, coluna);
 
     for (i = 0; i < linha; i++)
     {
       for (j = 0; j < coluna; j++)
       {
-        printf("Por favor, digite os valores da linha %d coluna %d separados por enter:  \n", i + 1, j + 1);
         scanf("%d", &valor);
         tabuleiro[i][j] = valor;
       }
     }
-
-    imprimeMatriz(tabuleiro, linha, coluna);
-
-    printf("Por favor, Digite a quantidade de palavras:\n");
     scanf("%d", &QtdPalavras);
     getchar();
-    palavra **dicionario = malloc(QtdPalavras * sizeof(palavra *));
+    dicionario = malloc(QtdPalavras * sizeof(palavra *));
 
     for (i = 0; i < QtdPalavras; i++)
     {
       dicionario[i] = malloc(sizeof(palavra));
       colocapalavra(dicionario[i]);
       colocatamanho(dicionario[i]);
+      dicionario[i]->disponibilidade=1;
     }
-    //ordenapalavras(dicionario, QtdPalavras);
+    ordenapalavras(dicionario, QtdPalavras);
 
-    char **tabuleiroResposta = alocaMatrizChar(linha, coluna);
+    tabuleiroResposta = alocaMatrizChar(linha, coluna);
 
     for (i = 0; i < linha; i++)
     {
@@ -381,13 +425,11 @@ void PalavrasCruzadas(char **tabuleiroResposta, int linhaMax, int colunaMax, int
           tabuleiroResposta[i][j] = ' ';
       }
     }
-
-    imprimeMatrizChar(tabuleiroResposta, linha, coluna);
-    printf("%s\n", dicionario[0]->palavra);
-    printf("%s\n", dicionario[1]->palavra);
-    int totalpalavras = contaPalavras(tabuleiro, linha, coluna);
-    printf("%d\n", totalpalavras);
+    totalpalavras = contaPalavras(tabuleiro,linha,coluna);
     PalavrasCruzadas(tabuleiroResposta,linha,coluna,totalpalavras,dicionario,QtdPalavras);
-    printf("Acabou\n");
+    destroiDicionario(dicionario,QtdPalavras);
+    liberaMatrizInt(tabuleiro,linha);
+    liberaMatrizChar(tabuleiroResposta,linha);
+    }
     return 0;
   }

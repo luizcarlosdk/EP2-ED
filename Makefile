@@ -1,2 +1,2 @@
 ep2.o:
-		gcc -Wall -g -o EP2 ep2.c pilha.c
+		gcc -Wall -ansi -pedantic -O2 -o EP2 ep2.c pilha.c
